@@ -9,13 +9,12 @@ export class FoodsController {
 
   @Post()
   create(@Body() createFoodDto: CreateFoodDto) {
-    console.log(createFoodDto)
-    return this.foodsService.createOne2(createFoodDto);
+    return this.foodsService.createOne(createFoodDto);
   }
 
-  @Get()
-  findAll() {
-    return this.foodsService.findAll();
+  @Get('/all')
+  findAll(){
+    return this.foodsService.findAll()
   }
 
   @Get(':id')

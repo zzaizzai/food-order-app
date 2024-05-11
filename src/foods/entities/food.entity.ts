@@ -11,6 +11,12 @@ export class Food extends BaseEntity {
 
     @Column()
     status: FoodStatus;
+
+    @Column({default: null, nullable: true})
+    category: string;
+
+    @Column({default: null, nullable: true})
+    store: string;
 }
 
 
