@@ -10,7 +10,7 @@ export class FoodsController {
   @Post()
   create(@Body() createFoodDto: CreateFoodDto) {
     console.log(createFoodDto)
-    return this.foodsService.create(createFoodDto);
+    return this.foodsService.createOne2(createFoodDto);
   }
 
   @Get()

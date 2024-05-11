@@ -13,16 +13,15 @@ export class FoodsService {
     private foodsRepository: FoodsRepository
     ){}
 
-  create(createFoodDto: CreateFoodDto) {
-    const { id, name } = createFoodDto;
-    
-    const food = {
-      id,
-      name,
-      status: FoodStatus.PUBLIC
+  async createOne2(createFoodDto: CreateFoodDto): Promise<Food> {
+
+    const temp: CreateFoodDto = {
+      name: createFoodDto.name,
+      status: FoodStatus.PRIVATE
     }
 
-    return food;
+    const result = await this.foodsRepository.create(temp).save()
+    return result 
   }
 
   findAll() {

@@ -1,4 +1,6 @@
+import { FoodStatus } from "../entities/food.entity";
+
 export class CreateFoodDto {
-    id: number;
     name: string;
+    status: FoodStatus
 }

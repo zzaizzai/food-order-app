@@ -9,6 +9,6 @@ export const typeORMConfig: TypeOrmModuleOptions = {
     database: 'food_order_app',
     entities: [__dirname + '/../**/*.entity.{js,ts}'] ,
     synchronize: true,
-    dropSchema: true
+    dropSchema: false
 
 }
