@@ -2,6 +2,8 @@ import { Body, Controller, Post, Req, UseGuards, ValidationPipe } from '@nestjs/
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from './get-user.decorator';
+import { User } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -22,8 +24,8 @@ export class AuthController {
     }
     @UseGuards(AuthGuard('jwt'))
     @Post('/test-token')
-    tokentest(@Req() req) {
-        console.log('req', req)
+    tokentest(@GetUser() user: User ) {
+        console.log('req', user)
     }
 
 }
