@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeORMConfig),
+    AuthModule,
     FoodsModule,
     AuthModule],
   controllers: [AppController],
