@@ -22,6 +22,7 @@ export class AuthController {
 
         return this.authService.signIn(authcredentialsDto)
     }
+    
     @UseGuards(AuthGuard('jwt'))
     @Post('/test-token')
     tokentest(@GetUser() user: User ) {

@@ -4,6 +4,7 @@ import { UpdateFoodDto } from './dto/update-food.dto';
 import { Food, FoodStatus } from './entities/food.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FoodsRepository } from './foods.repository';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class FoodsService {
@@ -13,15 +14,35 @@ export class FoodsService {
     private foodsRepository: FoodsRepository
     ){}
 
-  async createOne(createFoodDto: CreateFoodDto): Promise<Food> {
+  async createOne(createFoodDto: CreateFoodDto, user: User): Promise<Food> {
 
-    const temp: CreateFoodDto = {
+    const temp = {
       name: createFoodDto.name,
-      status: FoodStatus.PUBLIC
+      status: FoodStatus.PUBLIC,
+      user
     }
 
     const result = await this.foodsRepository.create(temp).save()
     return result 
+  }
+
+  async findOwnsAll(
+    user: User
+  ): Promise<Food[]> {
+    const query = this.foodsRepository.createQueryBuilder('foods')
+
+    query.where('foods.userId = :userId', {userId: user.id})
+    const foods = await query.getMany();
+
+    return foods
+  }
+
+  async deleteFood(id: number, user: User): Promise<void> {
+    const reuslt = await this.foodsRepository.delete({id, user})
+
+    if (reuslt.affected === 0) {
+      throw new NotFoundException(`Can't find Food with id ${id}`)
+    }
   }
 
   async findAll(): Promise<Food[]> {

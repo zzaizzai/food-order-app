@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Food } from "src/foods/entities/food.entity";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity('users')
 @Unique(['username'])
@@ -12,5 +13,9 @@ export class User extends BaseEntity {
     @Column()
     password: string
 
+    @OneToMany(type => Food, food => food.user, {eager: true})
+    foods: Food[]
+
+    
 
 }
