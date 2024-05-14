@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Logger, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -7,25 +7,41 @@ import { User } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
-
+    private logger = new Logger('AuthController')
     constructor(private authService: AuthService) {
-
     }
 
     @Post('/signup')
-    signUp(@Body(ValidationPipe) authcredentialsDto: AuthCredentialsDto ): Promise<void> {
-        return this.authService.signUp(authcredentialsDto)
+    async signUp(@Body(ValidationPipe) authcredentialsDto: AuthCredentialsDto): Promise<void> {
+        this.logger.log(`Trying to make a user with name ${authcredentialsDto.username}`)
+        try {
+            await this.authService.signUp(authcredentialsDto)
+            this.logger.log(`User ${authcredentialsDto.username} created`)
+        } catch (error) {
+            // this.logger.error(`Failed to create user with username: ${authcredentialsDto.username}`, error.stack);
+            this.logger.error(`Failed to create user with username: ${authcredentialsDto.username}`);
+            throw error; // Rethrow the error to ensure the client receives the error response
+        }
     }
 
     @Post('/signin')
-    signIn(@Body(ValidationPipe) authcredentialsDto: AuthCredentialsDto ): Promise<{accessToken: string}> {
+    async signIn(@Body(ValidationPipe) authcredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
 
-        return this.authService.signIn(authcredentialsDto)
+        this.logger.log(`Trying Log in user with ${authcredentialsDto.username}`)
+
+        try {
+            const accessToken = await this.authService.signIn(authcredentialsDto)
+            this.logger.log(`Succeed to log in user with ${authcredentialsDto.username}`)
+            return accessToken
+        } catch (error) {
+            this.logger.error(`Failed to login in user: ${authcredentialsDto.username}`);
+            throw error; // Rethrow the error to ensure the client receives the error response
+        }
     }
-    
+
     @UseGuards(AuthGuard('jwt'))
     @Post('/test-token')
-    tokentest(@GetUser() user: User ) {
+    tokentest(@GetUser() user: User) {
         console.log('req', user)
     }
 
