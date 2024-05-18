@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, Req, UseGuards, ParseIntPipe, Logger } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, Req, UseGuards, ParseIntPipe, Logger, Res, Render } from '@nestjs/common';
 import { FoodsService } from './foods.service';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
@@ -10,6 +10,12 @@ import { AuthGuard } from '@nestjs/passport';
 export class FoodsController {
   private logger = new Logger('FoodsController')
   constructor(private readonly foodsService: FoodsService) {}
+
+  @Get('/index')
+  @Render('foods/index')
+  indexPage(@Res() res: Response) {
+    return { msg: "hello" }
+  }
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
