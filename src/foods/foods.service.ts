@@ -12,7 +12,7 @@ export class FoodsService {
   constructor(
     @InjectRepository(Food)
     private foodsRepository: FoodsRepository
-    ){}
+  ) { }
 
   async createOne(createFoodDto: CreateFoodDto, user: User): Promise<Food> {
 
@@ -23,7 +23,7 @@ export class FoodsService {
     }
 
     const result = await this.foodsRepository.create(temp).save()
-    return result 
+    return result
   }
 
   async findOwnsAll(
@@ -31,14 +31,14 @@ export class FoodsService {
   ): Promise<Food[]> {
     const query = this.foodsRepository.createQueryBuilder('foods')
 
-    query.where('foods.userId = :userId', {userId: user.id})
+    query.where('foods.userId = :userId', { userId: user.id })
     const foods = await query.getMany();
 
     return foods
   }
 
   async deleteFood(id: number, user: User): Promise<void> {
-    const reuslt = await this.foodsRepository.delete({id, user})
+    const reuslt = await this.foodsRepository.delete({ id, user })
 
     if (reuslt.affected === 0) {
       throw new NotFoundException(`Can't find Food with id ${id}`)
@@ -68,4 +68,30 @@ export class FoodsService {
   remove(id: number) {
     return `This action removes a #${id} food`;
   }
+
+
+  async getNew(take: number): Promise<Food[]> {
+
+    const queryBuilder = await this.foodsRepository.createQueryBuilder('foods')
+    const orders = await queryBuilder
+      .orderBy('foods.id', "DESC")
+      .take(take)
+      .getMany()
+
+    return orders
+  }
+
+  async getSome(id: number, take: number): Promise<Food[]> {
+
+    const queryBuilder = await this.foodsRepository.createQueryBuilder('foods')
+    const orders = await queryBuilder
+      .where('foods.id < :id', { id })
+      .orderBy('foods.id', "DESC")
+      .take(take)
+      .getMany()
+
+    return orders
+  }
+
+
 }

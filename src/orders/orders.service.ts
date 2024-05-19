@@ -22,4 +22,15 @@ export class OrdersService {
         return orders
     }
 
+    async getSome(id: number, take: number): Promise<Order[]> {
+
+        const orders = await this.ordersRepository.find({
+            where: { id: id },
+            take: take,
+            order: { id: 'ASC' }
+        });
+        console.log(orders);
+        return orders
+    }
+
 }

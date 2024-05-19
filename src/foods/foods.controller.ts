@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, Req, UseGuards, ParseIntPipe, Logger, Res, Render } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, Req, UseGuards, ParseIntPipe, Logger, Res, Render, Query } from '@nestjs/common';
 import { FoodsService } from './foods.service';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
@@ -9,7 +9,27 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('foods')
 export class FoodsController {
   private logger = new Logger('FoodsController')
-  constructor(private readonly foodsService: FoodsService) {}
+  constructor(private readonly foodsService: FoodsService) { }
+
+  @Get('/getSome')
+  getSome(@GetUser() user: User,
+    @Query('id') id: string,
+    @Query('take') take: string
+
+  ) {
+    console.log(id)
+    console.log(take)
+    this.logger.verbose(`User ${user?.username} trying to get all orders`)
+    return this.foodsService.getSome(+id, +take)
+  }
+
+  @Get('/getNew')
+  getNew(@GetUser() user: User,
+    @Query('take') take: string
+  ) {
+    this.logger.verbose(`User ${user?.username} trying to get all orders`)
+    return this.foodsService.getNew(+take)
+  }
 
   @Get('/index')
   @Render('foods/index')
@@ -27,7 +47,7 @@ export class FoodsController {
   }
 
   @Get('/all')
-  findAll(@GetUser() user: User){
+  findAll(@GetUser() user: User) {
     this.logger.verbose(`User ${user?.username} trying to get all boards`)
     return this.foodsService.findAll()
   }
@@ -44,7 +64,7 @@ export class FoodsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/owns')
-  findOwns(@GetUser() user: User){
+  findOwns(@GetUser() user: User) {
     return this.foodsService.findOwnsAll(user)
   }
 
@@ -63,4 +83,9 @@ export class FoodsController {
   remove(@Param('id') id: string) {
     return this.foodsService.remove(+id);
   }
+
+
+
+
+
 }

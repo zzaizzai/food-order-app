@@ -16,4 +16,5 @@ export class FoodsRepository extends Repository<Food> {
     async findOneById(id: number): Promise<Food> {
         return await this.repository.findOneBy({id});
     }
+    
 }
