@@ -1,4 +1,5 @@
 import { Food } from "src/foods/entities/food.entity";
+import { Order } from "src/orders/entities/order.entity";
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity('users')
@@ -13,9 +14,10 @@ export class User extends BaseEntity {
     @Column()
     password: string
 
-    @OneToMany(type => Food, food => food.user, {eager: true})
+    @OneToMany(type => Food, food => food.user)
     foods: Food[]
 
-    
+    @OneToMany(type => Order, order => order.user)
+    orders: Order[]
 
 }
