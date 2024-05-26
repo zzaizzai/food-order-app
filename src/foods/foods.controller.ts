@@ -11,24 +11,30 @@ export class FoodsController {
   private logger = new Logger('FoodsController')
   constructor(private readonly foodsService: FoodsService) { }
 
+  // @Get('/getSome')
+  // getSome(@GetUser() user: User,
+  //   @Query('id') id: string,
+  //   @Query('take') take: string
+
+  // ) {
+  //   console.log(id)
+  //   console.log(take)
+  //   this.logger.verbose(`User ${user?.username} trying to get all orders`)
+  //   return this.foodsService.getSome(+id, +take)
+  // }
+
   @Get('/getSome')
-  getSome(@GetUser() user: User,
-    @Query('id') id: string,
-    @Query('take') take: string
-
-  ) {
-    console.log(id)
-    console.log(take)
-    this.logger.verbose(`User ${user?.username} trying to get all orders`)
-    return this.foodsService.getSome(+id, +take)
-  }
-
-  @Get('/getNew')
   getNew(@GetUser() user: User,
-    @Query('take') take: string
+    @Query('take') take: string,
+    @Query('lastId') lastId: string
   ) {
+
+    const parsedLastId = parseInt(lastId, 10)
+    const validLastId = isNaN(parsedLastId) ? -1 : parsedLastId
+    console.log(validLastId)
+
     this.logger.verbose(`User ${user?.username} trying to get all orders`)
-    return this.foodsService.getNew(+take)
+    return this.foodsService.getSome(+take, validLastId)
   }
 
   @Get('/index')

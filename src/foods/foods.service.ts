@@ -70,28 +70,35 @@ export class FoodsService {
   }
 
 
-  async getNew(take: number): Promise<Food[]> {
+  async getSome(take: number, lastId: number): Promise<Food[]> {
 
-    const queryBuilder = await this.foodsRepository.createQueryBuilder('foods')
+    const queryBuilder = this.foodsRepository.createQueryBuilder('foods')
+
+    if (lastId && lastId > 0) {
+      queryBuilder.where('foods.id < :lastId', { lastId });
+    }
+  
+    // 공통된 부분은 조건문 밖으로 빼서 한 번만 실행
     const orders = await queryBuilder
-      .orderBy('foods.id', "DESC")
+      .orderBy('foods.id', 'DESC')
       .take(take)
-      .getMany()
-
-    return orders
+      .getMany();
+  
+    return orders;
   }
 
-  async getSome(id: number, take: number): Promise<Food[]> {
 
-    const queryBuilder = await this.foodsRepository.createQueryBuilder('foods')
-    const orders = await queryBuilder
-      .where('foods.id < :id', { id })
-      .orderBy('foods.id', "DESC")
-      .take(take)
-      .getMany()
+  // async getSome(id: number, take: number): Promise<Food[]> {
 
-    return orders
-  }
+  //   const queryBuilder = await this.foodsRepository.createQueryBuilder('foods')
+  //   const orders = await queryBuilder
+  //     .where('foods.id < :id', { id })
+  //     .orderBy('foods.id', "DESC")
+  //     .take(take)
+  //     .getMany()
+
+  //   return orders
+  // }
 
 
 }
