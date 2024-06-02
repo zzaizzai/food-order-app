@@ -6,5 +6,5 @@ export class CreateFoodDto {
     @IsNotEmpty()
     name: string;
 
-    status: FoodStatus
+    status: FoodStatus = FoodStatus.PUBLIC
 }

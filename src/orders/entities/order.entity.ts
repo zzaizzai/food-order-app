@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Food } from "../../foods/entities/food.entity";
 import { User } from "src/auth/user.entity";
 
@@ -22,6 +22,10 @@ export class Order extends BaseEntity {
 
     @ManyToOne(type => User, user => user.orders)
     user: User
+
+    @CreateDateColumn()
+    createdAt: Date
+
 }
 
 export enum OrderStatus {

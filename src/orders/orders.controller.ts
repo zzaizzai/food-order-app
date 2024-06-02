@@ -1,7 +1,9 @@
-import { Controller, Get, Logger, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Param, Post, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { Order } from './entities/order.entity';
 
 @Controller('orders')
 export class OrdersController {
@@ -21,11 +23,14 @@ export class OrdersController {
         @Query('take') take: string
 
     ) {
-        console.log(id)
-        console.log(take)
-        this.logger.verbose(`User ${user?.username} trying to get all orders`)
+        this.logger.verbose(`User ${user?.username} trying to get some orders id:${id}, take: ${take}`)
         return this.ordersService.getSome(+id, +take)
     }
 
-
+    @Post('/addOne')
+    async addOne(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
+        console.log(createOrderDto)
+        this.logger.verbose(`Order id:${createOrderDto.foodId}, user:${createOrderDto.userId}, trying to be created`)
+        return await this.ordersService.addOne(createOrderDto)
+    }
 }

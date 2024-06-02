@@ -1,15 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
-import { Repository } from 'typeorm';
 import { OrdersRepository } from './orders.repository';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { FoodsRepository } from 'src/foods/foods.repository';
+import { UserRepository } from 'src/auth/user.repository';
+import { Food } from 'src/foods/entities/food.entity';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class OrdersService {
 
     constructor(
         @InjectRepository(Order)
-        private ordersRepository: OrdersRepository
+        private ordersRepository: OrdersRepository,
+        @InjectRepository(Food)
+        private readonly foodRepository: FoodsRepository,
+        @InjectRepository(User)
+        private readonly userRepository: UserRepository,
 
     ) { }
 
@@ -18,7 +26,12 @@ export class OrdersService {
     }
 
     async findAll(): Promise<Order[]> {
-        const orders = this.ordersRepository.find({ relations: ['user', 'food'] });
+        const orders = this.ordersRepository.find({
+            relations: ['user', 'food'],
+            order: {
+                id: 'DESC'
+            }
+        });
         return orders
     }
 
@@ -33,4 +46,27 @@ export class OrdersService {
         return orders
     }
 
+    async addOne(orderData: CreateOrderDto): Promise<Order> {
+        const { foodId, userId, quantity, totalPrice, status } = orderData
+
+        const food = await this.foodRepository.findOneById(foodId)
+
+        if (!food) {
+            throw new NotFoundException(`Food with ID ${foodId} not found`);
+        }
+
+        const user = await this.userRepository.findOneById(userId)
+        if (!user) {
+            throw new NotFoundException(`User with ID ${userId} not found`);
+        }
+
+        const order = this.ordersRepository.create({
+            food,
+            user,
+            quantity,
+            totalPrice,
+            status,
+        });
+        return await this.ordersRepository.save(order)
+    }
 }

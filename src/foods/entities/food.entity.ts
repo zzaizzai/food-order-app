@@ -1,5 +1,5 @@
 import { User } from "src/auth/user.entity";
-import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "../../orders/entities/order.entity";
 
 @Entity("foods")
@@ -28,6 +28,9 @@ export class Food extends BaseEntity {
 
     @OneToMany(type => Order, order => order.food)
     orders: Order[]
+
+    @CreateDateColumn()
+    createdAt: Date
 }
 
 

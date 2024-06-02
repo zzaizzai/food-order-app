@@ -33,7 +33,7 @@ export class FoodsController {
     const validLastId = isNaN(parsedLastId) ? -1 : parsedLastId
     console.log(validLastId)
 
-    this.logger.verbose(`User ${user?.username} trying to get all orders`)
+    this.logger.verbose(`User ${user?.username} trying to get some foods id:${lastId}, take: ${take}`)
     return this.foodsService.getSome(+take, validLastId)
   }
 
