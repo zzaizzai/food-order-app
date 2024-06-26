@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Logger, Post, Get, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -42,6 +42,12 @@ export class AuthController {
     @UseGuards(AuthGuard('jwt'))
     @Post('/test-token')
     tokentest(@GetUser() user: User) {
+        console.log('req', user)
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Get('/test-token')
+    tokentesta(@GetUser() user: User) {
         console.log('req', user)
     }
 

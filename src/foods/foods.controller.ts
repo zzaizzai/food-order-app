@@ -12,6 +12,7 @@ export class FoodsController {
   constructor(private readonly foodsService: FoodsService) { }
 
   // for food main page to get some food data
+  @UseGuards(AuthGuard('jwt'))
   @Get('/getSome')
   getNew(@GetUser() user: User,
     @Query('take') take: string,
