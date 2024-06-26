@@ -21,16 +21,18 @@ export class OrdersController {
     getSome(@GetUser() user: User,
         @Query('id') id: string,
         @Query('take') take: string
-
-    ) {
+    ): Promise<Order[]> {
         this.logger.verbose(`User ${user?.username} trying to get some orders id:${id}, take: ${take}`)
         return this.ordersService.getSome(+id, +take)
     }
 
     @Post('/addOne')
-    async addOne(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
+    async addOne(
+        @GetUser() user: User, 
+        @Body() createOrderDto: CreateOrderDto
+    ): Promise<Order> {
         console.log(createOrderDto)
-        this.logger.verbose(`Order id:${createOrderDto.foodId}, user:${createOrderDto.userId}, trying to be created`)
+        this.logger.verbose(`User ${user?.username} Order id:${createOrderDto.foodId}, user:${createOrderDto.userId}, trying to be created`)
         return await this.ordersService.addOne(createOrderDto)
     }
 }

@@ -11,18 +11,7 @@ export class FoodsController {
   private logger = new Logger('FoodsController')
   constructor(private readonly foodsService: FoodsService) { }
 
-  // @Get('/getSome')
-  // getSome(@GetUser() user: User,
-  //   @Query('id') id: string,
-  //   @Query('take') take: string
-
-  // ) {
-  //   console.log(id)
-  //   console.log(take)
-  //   this.logger.verbose(`User ${user?.username} trying to get all orders`)
-  //   return this.foodsService.getSome(+id, +take)
-  // }
-
+  // for food main page to get some food data
   @Get('/getSome')
   getNew(@GetUser() user: User,
     @Query('take') take: string,
