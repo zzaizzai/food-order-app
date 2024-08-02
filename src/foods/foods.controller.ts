@@ -42,6 +42,15 @@ export class FoodsController {
     return this.foodsService.createOne(createFoodDto, user);
   }
 
+  @Post('/add')
+  @UseGuards(AuthGuard('jwt'))
+  @UsePipes(ValidationPipe)
+  add(@Body() createFoodDto: CreateFoodDto, @GetUser() user: User, @Req() req) {
+    this.logger.verbose(`User ${user?.username} creating a new food
+    Payload: ${JSON.stringify(createFoodDto)}`)
+    return this.foodsService.addOne(createFoodDto)
+  }
+
   @Get('/all')
   findAll(@GetUser() user: User) {
     this.logger.verbose(`User ${user?.username} trying to get all boards`)

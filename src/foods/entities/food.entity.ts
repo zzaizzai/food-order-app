@@ -2,6 +2,12 @@ import { User } from "src/auth/user.entity";
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "../../orders/entities/order.entity";
 
+export enum FoodStatus {
+    PUBLIC = 'PUBLIC',
+    PRIVATE = 'PRIVATE',
+}
+
+
 @Entity("foods")
 export class Food extends BaseEntity {
 
@@ -11,7 +17,7 @@ export class Food extends BaseEntity {
     @Column()
     name: string;
 
-    @Column()
+    @Column({default: FoodStatus.PUBLIC})
     status: FoodStatus;
 
     @Column({default: null, nullable: true})
@@ -19,6 +25,9 @@ export class Food extends BaseEntity {
 
     @Column({default: null, nullable: true})
     store: string;
+
+    @Column({nullable: true})
+    description: string;
 
     @Column({default: 1})
     price: number;
@@ -34,7 +43,3 @@ export class Food extends BaseEntity {
 }
 
 
-export enum FoodStatus {
-    PUBLIC = 'PUBLIC',
-    PRIVATE = 'PRIVATE',
-}
