@@ -38,9 +38,9 @@ export class FoodsService {
     }
 
     async deleteFood(id: number, user: User): Promise<void> {
-        const reuslt = await this.foodsRepository.delete({ id, user })
+        const result = await this.foodsRepository.delete({ id, user })
 
-        if (reuslt.affected === 0) {
+        if (result.affected === 0) {
             throw new NotFoundException(`Can't find Food with id ${id}`)
         }
     }
@@ -69,13 +69,19 @@ export class FoodsService {
 
         Object.assign(found, updateFoodDto)
 
-        const updatedFood  = await this.foodsRepository.save(found)
+        const updatedFood = await this.foodsRepository.save(found)
 
         return updatedFood;
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} food`;
+    async delete(id: number): Promise<void> {
+
+        const result = await this.foodsRepository.delete({ id })
+
+        if (result.affected === 0) {
+            throw new NotFoundException(`Can't find Food with id ${id}`)
+        }
+
     }
 
 
