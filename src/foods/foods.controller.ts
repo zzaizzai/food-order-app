@@ -74,13 +74,14 @@ export class FoodsController {
   }
 
 
-  @Get(':id')
+  @Get('/getone/:id')
   findOne(@Param('id') id: number) {
     return this.foodsService.findOne(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateFoodDto: UpdateFoodDto) {
+    this.logger.verbose(`Food Id: ${id} trying to update`)
     return this.foodsService.update(+id, updateFoodDto);
   }
 

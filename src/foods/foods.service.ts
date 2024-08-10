@@ -60,8 +60,18 @@ export class FoodsService {
         return found
     }
 
-    update(id: number, updateFoodDto: UpdateFoodDto) {
-        return `This action updates a #${id} food`;
+    async update(id: number, updateFoodDto: UpdateFoodDto) {
+        const found = await this.foodsRepository.findOneById(id);
+
+        if (!found) {
+            throw new NotFoundException(`Cant't find Food with id ${id}`)
+        }
+
+        Object.assign(found, updateFoodDto)
+
+        const updatedFood  = await this.foodsRepository.save(found)
+
+        return updatedFood;
     }
 
     remove(id: number) {
