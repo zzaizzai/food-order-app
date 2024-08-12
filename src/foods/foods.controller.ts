@@ -57,14 +57,14 @@ export class FoodsController {
     return this.foodsService.findAll()
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Delete('/:id')
-  delete(
-    @Param('id', ParseIntPipe) id,
-    @GetUser() user: User
-  ): Promise<void> {
-    return this.foodsService.deleteFood(id, user)
-  }
+  // @UseGuards(AuthGuard('jwt'))
+  // @Delete('/:id')
+  // delete(
+  //   @Param('id', ParseIntPipe) id,
+  //   @GetUser() user: User
+  // ): Promise<void> {
+  //   return this.foodsService.deleteFood(id, user)
+  // }
 
 
   @UseGuards(AuthGuard('jwt'))
@@ -85,13 +85,11 @@ export class FoodsController {
     return this.foodsService.update(+id, updateFoodDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.foodsService.delete(+id);
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/:id')
+  deleteOne(@Param('id') id: string, @GetUser() user: User) {
+    console.log("delete")
+    console.log(id, user)
+    return this.foodsService.deleteFood(+id, user);
   }
-
-
-
-
-
 }

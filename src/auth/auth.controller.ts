@@ -40,6 +40,12 @@ export class AuthController {
     }
 
     @UseGuards(AuthGuard('jwt'))
+    @Get('/check-token')
+    checkToken(@GetUser() user: User) {
+        console.log(user)
+    }
+
+    @UseGuards(AuthGuard('jwt'))
     @Post('/test-token')
     tokentest(@GetUser() user: User) {
         console.log('req', user)

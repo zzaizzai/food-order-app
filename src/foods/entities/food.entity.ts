@@ -1,5 +1,5 @@
 import { User } from "src/auth/user.entity";
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Order } from "../../orders/entities/order.entity";
 
 export enum FoodStatus {
@@ -17,19 +17,19 @@ export class Food extends BaseEntity {
     @Column()
     name: string;
 
-    @Column({default: FoodStatus.PUBLIC})
+    @Column({ default: FoodStatus.PUBLIC })
     status: FoodStatus;
 
-    @Column({default: null, nullable: true})
+    @Column({ default: null, nullable: true })
     category: string;
 
-    @Column({default: null, nullable: true})
+    @Column({ default: null, nullable: true })
     store: string;
 
-    @Column({nullable: true})
+    @Column({ nullable: true })
     description: string;
 
-    @Column({default: 1})
+    @Column({ default: 1000 })
     price: number;
 
     @ManyToOne(type => User, user => user.foods)
@@ -40,6 +40,15 @@ export class Food extends BaseEntity {
 
     @CreateDateColumn()
     createdAt: Date
+
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
+
+    @ManyToOne(type => User, user => user.id)
+    deletedBy: User
 }
 
 

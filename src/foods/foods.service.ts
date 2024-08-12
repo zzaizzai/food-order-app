@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
 import { Food, FoodStatus } from './entities/food.entity';
@@ -38,11 +38,26 @@ export class FoodsService {
     }
 
     async deleteFood(id: number, user: User): Promise<void> {
-        const result = await this.foodsRepository.delete({ id, user })
+        const food = await this.foodsRepository.findOne({ where: { id } });
 
-        if (result.affected === 0) {
-            throw new NotFoundException(`Can't find Food with id ${id}`)
+        console.log(food)
+        if (!food) {
+            throw new NotFoundException(`Can't find Food with id ${id}`);
         }
+
+        // admin mode
+        if (user.username !== "admin") {
+
+            // UserCheck
+            if (food.user?.id !== user?.id) {
+                throw new ForbiddenException('You are not authorized to delete this food.');
+            }
+        }
+
+        food.deletedAt = new Date();
+        food.deletedBy = user
+
+        await this.foodsRepository.save(food)
     }
 
     async findAll(): Promise<Food[]> {
