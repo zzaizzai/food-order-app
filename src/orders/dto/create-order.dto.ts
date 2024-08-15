@@ -14,7 +14,22 @@ export class CreateOrderDto {
 
     @IsNotEmpty()
     totalPrice: number;
-    
+
+    status: OrderStatus = OrderStatus.ORDERED
+
+}
+
+export class CreateOrderRequestDto {
+
+    @IsNotEmpty()
+    foodId: number;
+
+    @IsNotEmpty()
+    quantity: number;
+
+    @IsNotEmpty()
+    totalPrice: number;
+
     status: OrderStatus = OrderStatus.ORDERED
 
 }
