@@ -42,6 +42,7 @@ export class AuthController {
     @UseGuards(AuthGuard('jwt'))
     @Get('/check-token')
     checkToken(@GetUser() user: User) {
+        this.logger.log('check token user', user.username)
         console.log(user)
     }
 
