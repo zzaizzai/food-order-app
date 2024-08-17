@@ -114,7 +114,7 @@ export class FoodsService {
             queryBuilder.where('foods.id < :lastId', { lastId });
         }
 
-        // 공통된 부분은 조건문 밖으로 빼서 한 번만 실행
+        // Common query execution
         const orders = await queryBuilder
             .orderBy('foods.id', 'DESC')
             .take(take)
@@ -123,18 +123,30 @@ export class FoodsService {
         return orders;
     }
 
+    async getSomeWithSearchKey(take: number, lastId: number, searchKey: string): Promise<Food[]> {
+        const queryBuilder = this.foodsRepository.createQueryBuilder('foods');
 
-    // async getSome(id: number, take: number): Promise<Food[]> {
+        // Apply lastId filter if provided
+        if (lastId && lastId > 0) {
+            queryBuilder.where('foods.id < :lastId', { lastId });
+        }
 
-    //   const queryBuilder = await this.foodsRepository.createQueryBuilder('foods')
-    //   const orders = await queryBuilder
-    //     .where('foods.id < :id', { id })
-    //     .orderBy('foods.id', "DESC")
-    //     .take(take)
-    //     .getMany()
+        // Apply searchKey filter if provided
+        if (searchKey) {
+            queryBuilder.andWhere(
+                `(LOWER(foods.name) LIKE LOWER(:searchKey) 
+                OR LOWER(foods.description) LIKE LOWER(:searchKey) 
+                OR LOWER(foods.category) LIKE LOWER(:searchKey))`,
+                { searchKey: `%${searchKey.toLowerCase()}%` }
+            );
+        }
 
-    //   return orders
-    // }
+        // Common query execution
+        const orders = await queryBuilder
+            .orderBy('foods.id', 'DESC')
+            .take(take)
+            .getMany();
 
-
+        return orders;
+    }
 }

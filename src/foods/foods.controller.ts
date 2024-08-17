@@ -27,6 +27,25 @@ export class FoodsController {
     return this.foodsService.getSome(+take, validLastId)
   }
 
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/getSomeWithSearchKey')
+  getSomeWithSearchKey(@GetUser() user: User,
+    @Query('take') take: string,
+    @Query('lastId') lastId: string,
+    @Query('searchKey') searchKey: string
+  ) {
+
+    const parsedLastId = parseInt(lastId, 10)
+    const validLastId = isNaN(parsedLastId) ? -1 : parsedLastId
+    console.log(validLastId)
+
+    this.logger.verbose(`User ${user?.username} trying to get some foods id:${lastId}, take: ${take} with searchkey: ${searchKey}`)
+    return this.foodsService.getSomeWithSearchKey(+take, validLastId, searchKey)
+  }
+
+
+
   @Get('/index')
   @Render('foods/index')
   indexPage(@Res() res: Response) {
