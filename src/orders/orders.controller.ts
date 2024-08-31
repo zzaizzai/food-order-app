@@ -30,6 +30,16 @@ export class OrdersController {
     }
 
     @UseGuards(AuthGuard('jwt'))
+    @Get('/getOne')
+    getOne(@GetUser() user: User,
+        @Query('id') id: string,
+    ): Promise<Order> {
+        this.logger.verbose(`User ${user?.username} trying to get one order id:${id}`)
+        return this.ordersService.getOne(+id)
+    }
+
+
+    @UseGuards(AuthGuard('jwt'))
     @Post('/addOne')
     async addOne(
         @GetUser() user: User,

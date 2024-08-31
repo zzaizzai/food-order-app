@@ -46,6 +46,14 @@ export class OrdersService {
         return orders
     }
 
+
+    async getOne(id: number): Promise<Order> {
+
+        const order = await this.ordersRepository.findOneById(id);
+        console.log(order);
+        return order
+    }
+
     async addOne(orderData: CreateOrderDto): Promise<Order> {
         const { foodId, userId, quantity, totalPrice, status } = orderData
 
